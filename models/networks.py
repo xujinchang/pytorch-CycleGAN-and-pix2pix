@@ -20,7 +20,8 @@ def weights_init(m):
         m.bias.data.fill_(0)
 
 
-def get_norm_layer(norm_type='instance'):
+def get_norm_layer(norm_type='batch'):
+    norm_type = 'batch'
     if norm_type == 'batch':
         norm_layer = functools.partial(nn.BatchNorm2d, affine=True)
     elif norm_type == 'instance':
