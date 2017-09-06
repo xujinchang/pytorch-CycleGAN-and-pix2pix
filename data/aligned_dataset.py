@@ -4,8 +4,22 @@ import torchvision.transforms as transforms
 import torch
 from data.base_dataset import BaseDataset
 from data.image_folder import make_dataset
-from PIL import Image
+from PIL import Image,ImageFilter
 
+class MyGaussianBlur(ImageFilter.Filter):
+    name = "GaussianBlur"
+
+    def __init__(self, radius=2, bounds=None):
+        self.radius = radius
+        self.bounds = bounds
+
+    def filter(self, image):
+        if self.bounds:
+            clips = image.crop(self.bounds).gaussian_blur(self.radius)
+            image.paste(clips, self.bounds)
+            return image
+        else:
+            return image.gaussian_blur(self.radius)
 
 class AlignedDataset(BaseDataset):
     def initialize(self, opt):
@@ -26,8 +40,13 @@ class AlignedDataset(BaseDataset):
     def __getitem__(self, index):
         AB_path = self.AB_paths[index]
         AB = Image.open(AB_path).convert('RGB')
-        AB = AB.resize((self.opt.loadSize * 2, self.opt.loadSize), Image.BICUBIC)
+        AB = AB.resize((self.opt.loadSize*2, self.opt.loadSize), Image.BICUBIC) #groundtruth
+        AB_blur = AB.filter(MyGaussianBlur(radius=2))
+        # A = self.transform(AB)
+        # B = self.transform(B)
+        # AB = AB.resize((self.opt.loadSize * 2, self.opt.loadSize), Image.BICUBIC)
         AB = self.transform(AB)
+        AB_blur = self.transform(AB_blur)
 
         w_total = AB.size(2)
         w = int(w_total / 2)
@@ -37,9 +56,10 @@ class AlignedDataset(BaseDataset):
 
         A = AB[:, h_offset:h_offset + self.opt.fineSize,
                w_offset:w_offset + self.opt.fineSize]
-        B = AB[:, h_offset:h_offset + self.opt.fineSize,
-               w + w_offset:w + w_offset + self.opt.fineSize]
-
+        # B = AB[:, h_offset:h_offset + self.opt.fineSize,
+        #        w + w_offset:w + w_offset + self.opt.fineSize]
+        B = AB_blur[:, h_offset:h_offset + self.opt.fineSize,
+               w_offset:w_offset + self.opt.fineSize]
         if (not self.opt.no_flip) and random.random() < 0.5:
             idx = [i for i in range(A.size(2) - 1, -1, -1)]
             idx = torch.LongTensor(idx)
