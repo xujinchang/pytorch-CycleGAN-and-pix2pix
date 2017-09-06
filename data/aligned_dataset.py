@@ -40,26 +40,28 @@ class AlignedDataset(BaseDataset):
     def __getitem__(self, index):
         AB_path = self.AB_paths[index]
         AB = Image.open(AB_path).convert('RGB')
-        AB = AB.resize((self.opt.loadSize*2, self.opt.loadSize), Image.BICUBIC) #groundtruth
-        AB_blur = AB.filter(MyGaussianBlur(radius=2))
+        AB = AB.resize((self.opt.loadSize, self.opt.loadSize), Image.BICUBIC) #groundtruth
+        AB_blur_gauss = AB.filter(MyGaussianBlur(radius=5)) #gaussian blur
+        AB_blur_resize = AB.resize((self.opt.loadSize / 8, self.opt.loadSize / 8), Image.BICUBIC) #down_sample
+        AB_blur_resize = AB_blur_resize.resize((self.opt.loadSize, self.opt.loadSize), Image.BICUBIC) #up_sample
         # A = self.transform(AB)
         # B = self.transform(B)
         # AB = AB.resize((self.opt.loadSize * 2, self.opt.loadSize), Image.BICUBIC)
-        AB = self.transform(AB)
-        AB_blur = self.transform(AB_blur)
+        A = self.transform(AB)
+        B = self.transform(AB_blur_resize)
 
-        w_total = AB.size(2)
-        w = int(w_total / 2)
-        h = AB.size(1)
+        # w_total = AB.size(2)
+        w = A.size(2)
+        h = A.size(1)
         w_offset = random.randint(0, max(0, w - self.opt.fineSize - 1))
         h_offset = random.randint(0, max(0, h - self.opt.fineSize - 1))
 
-        A = AB[:, h_offset:h_offset + self.opt.fineSize,
+        A = A[:, h_offset:h_offset + self.opt.fineSize,
                w_offset:w_offset + self.opt.fineSize]
-        # B = AB[:, h_offset:h_offset + self.opt.fineSize,
-        #        w + w_offset:w + w_offset + self.opt.fineSize]
-        B = AB_blur[:, h_offset:h_offset + self.opt.fineSize,
+        B = B[:, h_offset:h_offset + self.opt.fineSize,
                w_offset:w_offset + self.opt.fineSize]
+        # B = AB_blur[:, h_offset:h_offset + self.opt.fineSize,
+        #        w_offset:w_offset + self.opt.fineSize]
         if (not self.opt.no_flip) and random.random() < 0.5:
             idx = [i for i in range(A.size(2) - 1, -1, -1)]
             idx = torch.LongTensor(idx)
