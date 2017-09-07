@@ -41,7 +41,7 @@ class AlignedDataset(BaseDataset):
         AB_path = self.AB_paths[index]
         AB = Image.open(AB_path).convert('RGB')
         AB = AB.resize((self.opt.loadSize, self.opt.loadSize), Image.BICUBIC) #groundtruth
-        AB_blur_gauss = AB.filter(MyGaussianBlur(radius=5)) #gaussian blur
+        # AB_blur_gauss = AB.filter(MyGaussianBlur(radius=3)) #gaussian blur
         AB_blur_resize = AB.resize((self.opt.loadSize / 8, self.opt.loadSize / 8), Image.BICUBIC) #down_sample
         AB_blur_resize = AB_blur_resize.resize((self.opt.loadSize, self.opt.loadSize), Image.BICUBIC) #up_sample
         # A = self.transform(AB)
