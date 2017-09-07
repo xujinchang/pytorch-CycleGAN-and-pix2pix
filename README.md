@@ -1,5 +1,3 @@
-<img src='imgs/horse2zebra.gif' align="right" width=384>
-
 <img src='imgs/demo.png' width="900"/>
 
 <br><br><br>
