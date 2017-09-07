@@ -5,6 +5,7 @@ realB images, the celeA images which are deblurred are treated as realA images. 
 
 <img src='imgs/demo.png' width="900"/>
 <br><br><br>
+
 # CycleGAN and pix2pix in PyTorch
 
 This is our ongoing PyTorch implementation for both unpaired and paired image-to-image translation.
