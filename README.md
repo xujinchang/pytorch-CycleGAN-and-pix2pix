@@ -1,10 +1,11 @@
 # Using pix2pix for face super resolutuon in PyTorch
 
 This is my implementation for face super resolution in order to deblur the face images. This project is based on the pix2pix paper and code. I have used the celeA aligned faces and for each pair training samples, the celeA images are considered as the 
-realB images, the celeA images which are deblurred are treated as realA images. Then by training the two networks G and D, the G networks can generate the vivid fakeB images.The following is the some samples.
+realB images, the celeA images which are deblurred are treated as realA images. Then by training the two networks G and D, the G networks can generate the vivid fakeB images.The following is the rendering.
 
 <img src='imgs/demo.png' width="900"/>
 <br><br><br>
+
 # CycleGAN and pix2pix in PyTorch
 
 This is our ongoing PyTorch implementation for both unpaired and paired image-to-image translation.
