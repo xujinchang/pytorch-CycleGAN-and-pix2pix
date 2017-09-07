@@ -1,5 +1,6 @@
-<img src='imgs/demo.png' width="900"/>
+# Using pix2pix for face super resolutuon in PyTorch
 
+<img src='imgs/demo.png' width="900"/>
 <br><br><br>
 
 # CycleGAN and pix2pix in PyTorch
