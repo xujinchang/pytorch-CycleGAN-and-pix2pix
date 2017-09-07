@@ -1,5 +1,7 @@
 <img src='imgs/horse2zebra.gif' align="right" width=384>
 
+<img src='imgs/demo.png' width="900"/>
+
 <br><br><br>
 
 # CycleGAN and pix2pix in PyTorch
